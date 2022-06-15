@@ -3,11 +3,11 @@ import SideBar from "./Sidebar";
 import Chat from './Chat';
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import {  setUser } from "./reducer";
+import {  setUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { REACT_APP_BASE_URL } from "./config";
+import { REACT_APP_BASE_URL } from "../config";
 const Home=()=>{
     const dispatch=useDispatch(); 
     const user=useSelector((state)=>state.user);

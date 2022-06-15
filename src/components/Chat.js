@@ -1,7 +1,7 @@
 import { useSelector,useDispatch } from "react-redux";
 import { useRef ,useEffect,useState} from "react";
 import axios from 'axios';
-import { setWantToChat,setActiveMessages,addActiveMessage,setUser, setActiveChat } from "./reducer";
+import { setWantToChat,setActiveMessages,addActiveMessage,setUser, setActiveChat } from "../reducer";
 import Message from './Message';
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { motion} from "framer-motion";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { ThreeDots } from  'react-loader-spinner'
-import {REACT_APP_BASE_URL} from './config';
+import {REACT_APP_BASE_URL} from '../config';
 var socket=null;
 const Chat=()=>{
     const navigate=useNavigate();

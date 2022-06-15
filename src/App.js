@@ -1,10 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import LogIn from './LogIn';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Home from './Home';
-import Protected from './ProtectedRoute';
-import ProtectHome from './ProtectHome';
+import {LogIn,SignIn,SignUp,Home,ProtectHome,Protected} from './components';
 const App=()=>{
   return <Routes>
     <Route path='/' element={<Protected path="/"><LogIn/></Protected>}/>

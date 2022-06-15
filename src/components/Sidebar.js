@@ -1,7 +1,7 @@
 import Contact from "./Contact";
 import { useState,useRef} from "react";
 import axios from "axios";
-import {setActiveChat} from './reducer';
+import {setActiveChat} from '../reducer';
 import {useDispatch} from 'react-redux';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { ThreeDots } from  'react-loader-spinner';
-import {REACT_APP_BASE_URL} from './config';
+import {REACT_APP_BASE_URL} from '../config';
 const SideBar=({user})=>{
   const navigate=useNavigate();
    const activeChat=useSelector((state)=>state.activeChat);

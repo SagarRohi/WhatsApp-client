@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { ThreeDots } from  'react-loader-spinner'
 import { motion } from "framer-motion";
-import { REACT_APP_BASE_URL } from "./config";
+import { REACT_APP_BASE_URL } from "../config";
 const SignIn=()=>{
     const phoneRef=useRef();
     const passwordRef=useRef();

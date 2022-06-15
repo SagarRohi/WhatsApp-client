@@ -1,7 +1,6 @@
 
-import {setActiveChat} from './reducer';
+import {setActiveChat,setWantToChat} from '../reducer';
 import {useDispatch} from 'react-redux';
-import { setWantToChat } from './reducer';
 const Contact=({contact})=>{
     const dispatch=useDispatch();
     const handleClick=()=>{
