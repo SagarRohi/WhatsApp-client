@@ -7,6 +7,10 @@ import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { motion} from "framer-motion";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { ThreeDots } from  'react-loader-spinner'
+import {REACT_APP_BASE_URL} from './config';
 var socket=null;
 const Chat=()=>{
     const navigate=useNavigate();
@@ -17,7 +21,7 @@ const Chat=()=>{
     const wantToChat=useSelector((state)=>state.wantToChat);
     const  me=useSelector(state=>state.user);
     const messageRef=useRef();
-
+    const [removing,setRemoving]=useState(false);
     const notify = (message) => toast(message, {
       position: "top-right",
       autoClose: 1000,
@@ -39,7 +43,7 @@ const Chat=()=>{
 
     //for socket event...(realtime)
    useEffect(()=>{
-    if(!socket) socket=io('https://whatsgoingclone.herokuapp.com/');
+    if(!socket) socket=io(REACT_APP_BASE_URL);
     return ()=>{
         socket.off();
     }
@@ -107,7 +111,7 @@ const Chat=()=>{
 
     // For Feteching The messages of sender and receiver.............
     useEffect(()=>{
-        if(activeUser) axios.get(`https://whatsgoingclone.herokuapp.com/message/?sender=${activeUser._id}&&receiver=${me._id}`).then((response)=>{
+        if(activeUser) axios.get(`${REACT_APP_BASE_URL}message/?sender=${activeUser._id}&&receiver=${me._id}`).then((response)=>{
             if(response.data) dispatch(setActiveMessages(response.data.messages));
         })
     },[activeUser])
@@ -132,7 +136,7 @@ const Chat=()=>{
                 sender:me._id,
                 receiver:activeUser._id,
             }
-            axios.post('https://whatsgoingclone.herokuapp.com/message/create',message).then((response)=>{
+            axios.post(`${REACT_APP_BASE_URL}message/create`,message).then((response)=>{
                messageRef.current.value="";
             })
     }
@@ -149,16 +153,19 @@ const Chat=()=>{
      //............delete the contact from contactList................
 
      const deleteContact=()=>{
-       axios.post('https://whatsgoingclone.herokuapp.com/user/delete',{
+      setRemoving(true);
+       axios.post(`${REACT_APP_BASE_URL}user/delete`,{
          sender:me._id,
          receiver:activeUser._id,
+       }).then(()=>{
+         setRemoving(false);
        })
      }
     if(!activeUser) return <div className="hidden sm:flex border-l-2 border-gray-400 flex-col w-full ">
         <div className="p-1 border-l-gray-300 border-l-2  border-green-800 border-b-2 bg-white flex gap-4 items-center ">
             <img src='./images/newtop.svg' alt="avatar" className=" h-12 object-cover rounded-full "/>
-            <button onClick={logOut} className=" px-6 py-2 hidden sm:block ml-auto mr-2
-             text-white bg-green-600 shadow-lg rounded tracking-wider">LogOut</button>
+            <motion.button whileTap={{scale:0.75}}   onClick={logOut} className=" px-6 py-2 hidden sm:block ml-auto mr-2
+             text-white bg-green-600 shadow-lg rounded tracking-wider">LogOut</motion.button>
           </div>
       <img src='/images/new.svg' alt='home' className="w-96 h-96 self-center  "/>
     </div>
@@ -171,22 +178,25 @@ const Chat=()=>{
             <p className='text-md opacity-50'>{activeUser?.phone}</p>
             </div>
            <div className="ml-auto flex gap-2">
-           <button onClick={()=>dispatch(setWantToChat(false))} className=" hidden  px-6 py-2 
-             text-white bg-green-600 shadow-lg rounded tracking-wider">Exit</button>
-             <button onClick={deleteContact} className=" px-6 py-2 hidden sm:block
-             text-white bg-red-800 shadow-lg rounded tracking-wider">Remove</button>
-            <button onClick={logOut} className=" px-6 py-2 hidden sm:block
-             text-white bg-green-600 shadow-lg rounded tracking-wider">LogOut</button>
+           <motion.button  whileTap={{scale:0.75}}  onClick={()=>dispatch(setWantToChat(false))} className=" hidden  px-6 py-2 
+             text-white bg-green-600 shadow-lg rounded tracking-wider">Exit</motion.button>
+             <motion.button  whileTap={{scale:0.75}}  onClick={deleteContact} className=" px-6 py-2 hidden sm:block
+             text-white bg-red-800 shadow-lg rounded tracking-wider">
+              {removing?<ThreeDots color="#FFFF" height={25} width={50} />:"Remove"}
+              </motion.button>
+            <motion.button  whileTap={{scale:0.75}}  onClick={logOut} className=" px-6 py-2 hidden sm:block
+             text-white bg-green-600 shadow-lg rounded tracking-wider">LogOut</motion.button>
              <img onClick={()=>setShowMenu(!showMenu)} src='/images/three-dots.svg' className=" sm:hidden rotate-180 w-8" alt='dots'/>
-             {showMenu&&<div className="shadow-lg shadow-gray-500 rounded fixed right-8 top-12 bg-white">
+             {showMenu&&<div className="shadow-lg shadow-gray-500 rounded fixed right-8 top-12 bg-white z-30">
                <p onClick={()=>{
                  dispatch(setWantToChat(false));
                  setShowMenu(false);
                }} className="px-8 py-4 border-b-2 border-gray-500 font-light tracking-wider text-green-500 ">Exit</p>
                <p onClick={()=>{
                  deleteContact();
-                 setShowMenu(false);
-               }} className="px-8 py-4 font-light tracking-wider text-red-500">Remove</p>
+               }} className="px-8 py-4 font-light tracking-wider text-red-500">
+                {removing?<ThreeDots color="#FFFFF" height={30} width={50} />:"Remove"}
+                </p>
              </div>}
            </div>
             

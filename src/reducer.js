@@ -5,6 +5,7 @@ const initialState={
     activeChat:null,
     activeMessages:[],
     wantToChat:false,
+    allContacts:[],
 }
 
 const userAndChatSlice= createSlice({

@@ -1,5 +1,5 @@
 import Contact from "./Contact";
-import { useState,useRef } from "react";
+import { useState,useRef} from "react";
 import axios from "axios";
 import {setActiveChat} from './reducer';
 import {useDispatch} from 'react-redux';
@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { ThreeDots } from  'react-loader-spinner';
+import {REACT_APP_BASE_URL} from './config';
 const SideBar=({user})=>{
   const navigate=useNavigate();
    const activeChat=useSelector((state)=>state.activeChat);
@@ -14,13 +17,15 @@ const SideBar=({user})=>{
    const [addContact,setAddContact]=useState(false);
    const contactRef=useRef();
    const dispatch=useDispatch();
+   const [loading,setLoading]=useState(false);
    const handleClick=()=>{
        const contact=contactRef.current.value;
        if(contact===user.phone){
         setAddContact(false);
         return;
        }
-      axios.post('https://whatsgoingclone.herokuapp.com/user/addcontact',{sender: user.phone, receiver:contact}).then((response)=>{
+       setLoading(true);
+      axios.post(`${REACT_APP_BASE_URL}user/addcontact`,{sender: user.phone, receiver:contact}).then((response)=>{
         const failure=response.data.failure;
         setAddContact(false);
         if(failure){
@@ -34,6 +39,7 @@ const SideBar=({user})=>{
             progress: undefined,
             });
         }
+        setLoading(false);
       })
    }
 
@@ -64,7 +70,9 @@ const SideBar=({user})=>{
         </div>
           {addContact&&<div className="origin-top h-full flex flex-col justify-center items-center p-8 bg-green-300 gap-4">
               <input ref={contactRef} type='text' placeholder='Phone Number'  className="px-4 py-2 outline-none rounded shadow-md shadow-gray-500 border-2 text-black"/>
-              <button onClick={handleClick} className="px-4 py-2 bg-green-600 w-max rounded">Add</button>
+              <button onClick={handleClick} className="px-4 py-2 bg-green-600 w-max rounded">
+                {loading?<ThreeDots color="#FFFF" height={20} width={50} />:"Add"}
+                </button>
           </div>}
         {!addContact&&<div className="overflow-x-scroll scrollbar-hide space-y-2.5 md:space-y-4 my-2 flex-1">
                    {contacts.length>0?contacts.map((contact,id)=>{
